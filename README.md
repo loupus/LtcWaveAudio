@@ -100,12 +100,12 @@ WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımı
 
 
 9-
-		waveFreeBlockCount = BLOCK_COUNT;
-		int hangiblock = 0;
-		lSetCurrentDateTime(&st, encoder);
-		while (stoppFlag == 0)
+	waveFreeBlockCount = BLOCK_COUNT;
+	int hangiblock = 0;
+	lSetCurrentDateTime(&st, encoder);
+	while (stoppFlag == 0)
 		{
-			if (waveFreeBlockCount > 0)
+		if (waveFreeBlockCount > 0)
 			{
 				LoadLtcData(blocks[hangiblock], encoder, blockdatasize, VFRAME_COUNT);
 				writeAudioBlock(hOut, blocks[hangiblock]);
@@ -114,6 +114,7 @@ WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımı
 			}
 			while (waveFreeBlockCount < 5) Sleep(10);
 		}
+	
 	
 Before we enter the loop, we set waveFreeBlockCount to the BLOCK_COUNT. We get current time and give ltc encoder its start point. Until we set stopflag and we have some free blocks we will load them with ltc data and write to audio interface.
 
