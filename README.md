@@ -16,10 +16,10 @@ C/C++  --> PreProcessor --> Preprocessor Definitions --> Edit --> _CRT_SECURE_NO
 2- For ltc, you have to download ltclib from https://github.com/x42/libltc. Go Download ZIP  and add decoder.c,  decoder.h,  encoder.c,  encoder.h, ltc.c, ltc.h and timecode.c files to your project. You can also compile libltc and use as library, however in this project we prefer to use code pages.
 2- Ltc için https://github.com/x42/libltc adresinden libltc'i indirin ve decoder.c,  decoder.h,  encoder.c,  encoder.h, ltc.c, ltc.h ve timecode.c dosylarını projenize ekleyin. İsterseniz libltc kütüphanesini derleyip öyle de kullanabilirsiniz. Ancak bu projede kod sayfalarını eklemeyi tercih ettik. 
 
-3- Create a new header file, like ltcaudio.h and a new c file like ltcaudio.c. 
+3-Create a new header file, like ltcaudio.h and a new c file like ltcaudio.c. 
 3-Yeni bir header ve c dosyası oluşturun. Biz ltcaudio.h ve ltcaudio.c isimlerini vermeyi tercih ettik. 
  
-4-  Include below headers, mmsystem.h is the header file that will let us use mme library, ltc.h is libltc header file.
+4-Include below headers, mmsystem.h is the header file that will let us use mme library, ltc.h is libltc header file.
 
 4-Aşağıdaki header dosyalarını ekleyin. mmsystem.h wave için ltc.h libltc kullanımı için ekliyoruz.
 
@@ -30,6 +30,7 @@ Very briefly, we will make a queue of wave blocks and send them to the audio dev
 Buradaki mantığımız basitçe şöyle olacak. waveFreeBlockCount adındaki değişkenimiz ile boş block sayımızı tutacağız. blokları doldurup ses cihazına gönderdikçe bu sayıyı düşürecek ve ses cihazı blokları okudukça bu sayıyı artıracağız. Sayı blok sayısına eşit oldukça yeni blok göndermeyeceğiz. Bir blokta 15 ltc frame bilgisi olacak. Ltc frame'i bir video frame gibi düşünün. Saniyede 25 frame olacak şekilde ayarladığımızda saniyede 48000 ses örneği veren bir ses akışında 48000/25 = 1920 bayt bir ltc frame data büyüklüğü olacak. Bundan 15 tanesi ile bir block oluşturduğumuzda aynı zamanda wave block align'ın en düşük kat sayısını da yakalamış olacağız. Toplamda 10 tane blok boşaldıkça yeni data ile dolacak ve yeniden ses cihazına gönderilecek.
 5- We will allocate memory for our blocks. For this, we will ask ltcencoder to give us a single ltc frame's size. Then we will multipy it with VFRAME_COUNT so that we find a single block's data size.
 5-Öncelikle bloklarımız için hafızadan yer tutacağız. Ancak bunun için tek bir ltc frame'in ne büyüklükte olduğunu ltcencoder'a soracağız. 
+
 	int lbuffsize = 0;
 	int blockdatasize = 0;
 	lbuffsize = ltc_encoder_get_buffersize(encoder);
@@ -48,13 +49,13 @@ Buradaki mantığımız basitçe şöyle olacak. waveFreeBlockCount adındaki de
 		memcpy(block->lpData + (len * i), buf, len);
 		ltc_encoder_inc_timecode(pencoder);
 	}
-	
 	block->dwBufferLength = len * vFrames;
 	
 ltc_encoder_inc_timecode(pencoder); 
 this line will increment the timecode for encoder so we dont need to give time info for encoder everytime. 
 bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde encoder'a zaman bilgisi vermek durumunda kalmayacağız.
-7- void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+7- 
+void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
 {	
 	if (uMsg != WOM_DONE) return;
 	int* freeBlockCounter = (int*)dwInstance;
@@ -64,7 +65,6 @@ bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde en
 	{
 		printf("freeblocks : %d\n", (*freeBlockCounter));
 	}
-
 	LeaveCriticalSection(&waveCriticalSection);
 }
 
@@ -76,6 +76,7 @@ Callback fonksiyonumuzda bir blok okunduğunda freeBlockCounter'ı 1 artıracağ
 		fprintf(stderr, "unable to open WAVE_MAPPER device\n");
 		return;
 	}
+	
 While opening waveout interface we tell that waveOutProc is our callback function and waveFreeBlockCount is its parameter. And we alsa say that we will use a callback function. There are many ways to open the interface you can visit msdn for waveOutOpen function. 
 WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımızı ve waveFreeBlockCount ise onun parametresi olduğunu ifade ediyoruz. Waveout arayüzünü kullanmanın birden fazla yolu var, ilgili msdn sayfasından waveOutOpen özellikleri incelenebilir.
 
@@ -99,7 +100,9 @@ Before we enter the loop, we set waveFreeBlockCount to the BLOCK_COUNT. We get c
 Döngüye girmeden önce waveFreeBlockCount sayısını block_count'a eşitleyelim. O anki zamanı alıp ltc encoder'a başlangıç zamanını verelim. Döngümüzü stoppFlag set edilene kadar devam edecek şekilde ayarlıyoruz. Döngüye girince öncelikle boş bir blok var mı diye kontrol ediyoruz ve sonunda ses cihazına en az 5 blok okuyana kadar fırsat veriyoruz.
 10- To stop streaming all we have to do is setting stop flag and releasing sources that we have borrowed from heap.
 Akışı durdurmak için tüm yapmamız gereken stop flag'ini set etmek ve heap'dan ödünç aldığımız hafıza alanını temizlemek.
+
 stoppFlag = 1;
+
 	for (int i = 0; i < BLOCK_COUNT; i++)
 	{
 		if (pblocks[i]->lpData)free(pblocks[i]->lpData);
