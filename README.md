@@ -87,12 +87,13 @@ Callback fonksiyonumuzda bir blok okunduğunda freeBlockCounter'ı 1 artıracağ
 
 
 8-
+
 	if (waveOutOpen(&hOut, WAVE_MAPPER, &wfx, (DWORD_PTR)waveOutProc, (DWORD_PTR)&waveFreeBlockCount, CALLBACK_FUNCTION | WAVE_ALLOWSYNC) != MMSYSERR_NOERROR) {
 		fprintf(stderr, "unable to open WAVE_MAPPER device\n");
 		return;
 	}
 	
-While opening waveout interface we tell that waveOutProc is our callback function and waveFreeBlockCount is its parameter. And we alsa say that we will use a callback function. There are many ways to open the interface you can visit msdn for waveOutOpen function. 
+While opening waveout interface we tell that waveOutProc is our callback function and waveFreeBlockCount is its parameter. And we also say that we will use a callback function. There are many ways to open the interface you can visit msdn for waveOutOpen function. 
 
 
 WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımızı ve waveFreeBlockCount ise onun parametresi olduğunu ifade ediyoruz. Waveout arayüzünü kullanmanın birden fazla yolu var, ilgili msdn sayfasından waveOutOpen özellikleri incelenebilir.
