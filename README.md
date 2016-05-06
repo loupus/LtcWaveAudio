@@ -65,20 +65,20 @@ bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde en
 
 7- 
 
+	void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+	{	
 
-void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
-{	
-	if (uMsg != WOM_DONE) return;
-	int* freeBlockCounter = (int*)dwInstance;
-	EnterCriticalSection(&waveCriticalSection);
-	(*freeBlockCounter)++;
-	if (stoppFlag)
-	{
-		printf("freeblocks : %d\n", (*freeBlockCounter));
-	}
-	LeaveCriticalSection(&waveCriticalSection);
+		if (uMsg != WOM_DONE) return;
+		int* freeBlockCounter = (int*)dwInstance;
+		EnterCriticalSection(&waveCriticalSection);
+		(*freeBlockCounter)++;
+		if (stoppFlag)
+		{
+			printf("freeblocks : %d\n", (*freeBlockCounter));
+		}
+		LeaveCriticalSection(&waveCriticalSection);
 	
-}
+	}
 
 
 In our callback function whenever a block is played, we will increment freeBlockCounter by 1. To do this we will pass this variable as a parameter to the callback function.
