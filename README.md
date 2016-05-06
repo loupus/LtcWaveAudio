@@ -61,13 +61,14 @@ Buradaki mantığımız basitçe şöyle olacak. waveFreeBlockCount adındaki de
 	ltc_encoder_inc_timecode(pencoder); 
 
 this line will increment the timecode for encoder so we dont need to give time info for encoder everytime. 
+
 bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde encoder'a zaman bilgisi vermek durumunda kalmayacağız.
 
 
 7- 
-	void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
-	{	
 
+        void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+	{	
 		if (uMsg != WOM_DONE) return;
 		int* freeBlockCounter = (int*)dwInstance;
 		EnterCriticalSection(&waveCriticalSection);
@@ -77,7 +78,6 @@ bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde en
 			printf("freeblocks : %d\n", (*freeBlockCounter));
 		}
 		LeaveCriticalSection(&waveCriticalSection);
-	
 	}
 
 
