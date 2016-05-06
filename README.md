@@ -56,7 +56,12 @@ this line will increment the timecode for encoder so we dont need to give time i
 bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde encoder'a zaman bilgisi vermek durumunda kalmayacağız.
 7- 
 
-void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
+void CALLBACK waveOutProc(
+HWAVEOUT hWaveOut, 
+UINT uMsg, 
+DWORD dwInstance, 
+DWORD dwParam1, 
+DWORD dwParam2)
 {	
 	if (uMsg != WOM_DONE) return;
 	int* freeBlockCounter = (int*)dwInstance;
@@ -100,9 +105,11 @@ WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımı
 	}
 	
 Before we enter the loop, we set waveFreeBlockCount to the BLOCK_COUNT. We get current time and give ltc encoder its start point. Until we set stopflag and we have some free blocks we will load them with ltc data and write to audio interface.
+
 Döngüye girmeden önce waveFreeBlockCount sayısını block_count'a eşitleyelim. O anki zamanı alıp ltc encoder'a başlangıç zamanını verelim. Döngümüzü stoppFlag set edilene kadar devam edecek şekilde ayarlıyoruz. Döngüye girince öncelikle boş bir blok var mı diye kontrol ediyoruz ve sonunda ses cihazına en az 5 blok okuyana kadar fırsat veriyoruz.
+
 10- To stop streaming all we have to do is setting stop flag and releasing sources that we have borrowed from heap.
-Akışı durdurmak için tüm yapmamız gereken stop flag'ini set etmek ve heap'dan ödünç aldığımız hafıza alanını temizlemek.
+10- Akışı durdurmak için tüm yapmamız gereken stop flag'ini set etmek ve heap'dan ödünç aldığımız hafıza alanını temizlemek.
 
 
 stoppFlag = 1;
