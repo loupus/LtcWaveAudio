@@ -100,6 +100,7 @@ WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımı
 
 
 9-
+
 	waveFreeBlockCount = BLOCK_COUNT;
 	int hangiblock = 0;
 	lSetCurrentDateTime(&st, encoder);
