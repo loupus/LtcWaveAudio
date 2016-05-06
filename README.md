@@ -48,11 +48,14 @@ Buradaki mantığımız basitçe şöyle olacak. waveFreeBlockCount adındaki de
 		ltc_encoder_inc_timecode(pencoder);
 	}
 	block->dwBufferLength = len * vFrames;
+
 	
 ltc_encoder_inc_timecode(pencoder); 
+
 this line will increment the timecode for encoder so we dont need to give time info for encoder everytime. 
 bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde encoder'a zaman bilgisi vermek durumunda kalmayacağız.
 7- 
+
 void CALLBACK waveOutProc(HWAVEOUT hWaveOut, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2)
 {	
 	if (uMsg != WOM_DONE) return;
@@ -70,6 +73,7 @@ In our callback function whenever a block is played, we will increment freeBlock
 Callback fonksiyonumuzda bir blok okunduğunda freeBlockCounter'ı 1 artıracağız. Bunu yapabilmek için bu değişkeni callback fonksiyonun parametresi olarak geçeceğiz.
 
 8-
+
 	if (waveOutOpen(&hOut, WAVE_MAPPER, &wfx, (DWORD_PTR)waveOutProc, (DWORD_PTR)&waveFreeBlockCount, CALLBACK_FUNCTION | WAVE_ALLOWSYNC) != MMSYSERR_NOERROR) {
 		fprintf(stderr, "unable to open WAVE_MAPPER device\n");
 		return;
@@ -79,6 +83,7 @@ While opening waveout interface we tell that waveOutProc is our callback functio
 WaveOut arayüzünü açarken waveOutProc callback fonksiyonunu kullanacağımızı ve waveFreeBlockCount ise onun parametresi olduğunu ifade ediyoruz. Waveout arayüzünü kullanmanın birden fazla yolu var, ilgili msdn sayfasından waveOutOpen özellikleri incelenebilir.
 
 9-
+
 	waveFreeBlockCount = BLOCK_COUNT;
 	int hangiblock = 0;
 	lSetCurrentDateTime(&st, encoder);
@@ -98,6 +103,7 @@ Before we enter the loop, we set waveFreeBlockCount to the BLOCK_COUNT. We get c
 Döngüye girmeden önce waveFreeBlockCount sayısını block_count'a eşitleyelim. O anki zamanı alıp ltc encoder'a başlangıç zamanını verelim. Döngümüzü stoppFlag set edilene kadar devam edecek şekilde ayarlıyoruz. Döngüye girince öncelikle boş bir blok var mı diye kontrol ediyoruz ve sonunda ses cihazına en az 5 blok okuyana kadar fırsat veriyoruz.
 10- To stop streaming all we have to do is setting stop flag and releasing sources that we have borrowed from heap.
 Akışı durdurmak için tüm yapmamız gereken stop flag'ini set etmek ve heap'dan ödünç aldığımız hafıza alanını temizlemek.
+
 
 stoppFlag = 1;
 
