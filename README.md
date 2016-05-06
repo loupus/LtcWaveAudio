@@ -19,12 +19,10 @@ C/C++  --> PreProcessor --> Preprocessor Definitions --> Edit --> _CRT_SECURE_NO
 3-Create a new header file, like ltcaudio.h and a new c file like ltcaudio.c. 
 3-Yeni bir header ve c dosyası oluşturun. Biz ltcaudio.h ve ltcaudio.c isimlerini vermeyi tercih ettik. 
  
-4-Include below headers, mmsystem.h is the header file that will let us use mme library, ltc.h is libltc header file.
+4-Include headers, mmsystem.h is the header file that will let us use mme library, ltc.h is libltc header file.
 
-4-Aşağıdaki header dosyalarını ekleyin. mmsystem.h wave için ltc.h libltc kullanımı için ekliyoruz.
+4-Header dosyalarını ekleyin. mmsystem.h wave için ltc.h libltc kullanımı için ekliyoruz.
 
-<mmsystem.h>
-"ltc.h"
 
 Very briefly, we will make a queue of wave blocks and send them to the audio device while decrementing waveFreeBlockCount. As soon as audio device interrupts and playbacks them we will increment the freeblock count so that we can queue more blocks. We will be using 48kHz, 8bit mono for audio and 25fps for ltc. Simple unit "frame" means different in audio and video. Ltc is for video but we will use it in audio. So for 25 fps ltc, single frame is 48000 / 25 = 1920 bayts. This is size of our single ltc frame. Single block will contain 15 frames, so, single block will size at least 1920*15 = 28000 bayts. This is 4 times bigger then wave nBlockAlign (48000 * 1 channel / 8 = 6000),  the least multiple of it. In queue we will have 10 blocks. To modify waveFreeBlockCount variable in different threads we will be using critical session and we will define a callback function waveOutProc  to know the time when a block is played. 
 Buradaki mantığımız basitçe şöyle olacak. waveFreeBlockCount adındaki değişkenimiz ile boş block sayımızı tutacağız. blokları doldurup ses cihazına gönderdikçe bu sayıyı düşürecek ve ses cihazı blokları okudukça bu sayıyı artıracağız. Sayı blok sayısına eşit oldukça yeni blok göndermeyeceğiz. Bir blokta 15 ltc frame bilgisi olacak. Ltc frame'i bir video frame gibi düşünün. Saniyede 25 frame olacak şekilde ayarladığımızda saniyede 48000 ses örneği veren bir ses akışında 48000/25 = 1920 bayt bir ltc frame data büyüklüğü olacak. Bundan 15 tanesi ile bir block oluşturduğumuzda aynı zamanda wave block align'ın en düşük kat sayısını da yakalamış olacağız. Toplamda 10 tane blok boşaldıkça yeni data ile dolacak ve yeniden ses cihazına gönderilecek.
