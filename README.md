@@ -54,6 +54,7 @@ ltc_encoder_inc_timecode(pencoder);
 
 this line will increment the timecode for encoder so we dont need to give time info for encoder everytime. 
 bu satır encoder'da timecode'u bir ileri sürecek, bu şekilde her seferinde encoder'a zaman bilgisi vermek durumunda kalmayacağız.
+
 7- 
 
 void CALLBACK waveOutProc(
