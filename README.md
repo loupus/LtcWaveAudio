@@ -1,5 +1,6 @@
 # LtcWaveAudio
 Ltc Timecode Playback With MME WaveOut
+
 Microsoft MultiMedia Extensions ile Ltc Timecode 
 
 We're going to develop a simple C project with Visual Studio 2013, that can playback wave data loaded with SMTPE timecode information. For this project we are going to use microsoft multimedia extensions to send timecode information through sound card. Why soundcard? Some professional timecode generators use it, and we will be able to send timecode info to their broadcast clocks. For this project we used Robin Gareus libltc on github (https://github.com/x42/libltc). Also, we follow the buffering logic of David Overton's sample on planetsourcecode for streaming wave packets to audio device . ( https://www.planet-source-code.com/vb/scripts/ShowCode.asp?txtCodeId=4422&lngWId=3). 
